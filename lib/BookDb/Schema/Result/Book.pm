@@ -2,7 +2,16 @@ package BookDb::Schema::Result::Book;
 use base 'DBIx::Class::Core';
 
 __PACKAGE__->table('books');
-__PACKAGE__->add_columns(qw/id title author/);
+__PACKAGE__->add_columns(
+    id => { data_type => 'integer', is_auto_increment => 1 },
+    title => { data_type => 'text' },
+    author => { data_type => 'text' },
+    translator => { data_type => 'text', is_nullable => 1 },
+    year => { data_type => 'integer' },
+    filename => { data_type => 'text' },
+    summary => { data_type => 'text', is_nullable => 1 },
+    comment => { data_type => 'text', is_nullable => 1 },
+);
 __PACKAGE__->set_primary_key('id');
 
 __PACKAGE__->has_many(

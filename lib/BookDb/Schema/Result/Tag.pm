@@ -1,6 +1,9 @@
 package BookDb::Schema::Result::Tag;
 use parent 'DBIx::Class::Core';
 
+use strict;
+use warnings;
+
 __PACKAGE__->table('tags');
 __PACKAGE__->add_columns(
     id => { data_type => 'integer', is_auto_increment => 1 },

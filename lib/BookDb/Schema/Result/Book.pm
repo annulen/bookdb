@@ -1,6 +1,9 @@
 package BookDb::Schema::Result::Book;
 use parent 'DBIx::Class::Core';
 
+use strict;
+use warnings;
+
 __PACKAGE__->table('books');
 __PACKAGE__->add_columns(
     id => { data_type => 'integer', is_auto_increment => 1 },

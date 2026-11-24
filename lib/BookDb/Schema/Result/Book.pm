@@ -10,7 +10,7 @@ __PACKAGE__->add_columns(
     title => { data_type => 'text' },
     author => { data_type => 'text' },
     translator => { data_type => 'text', is_nullable => 1 },
-    year => { data_type => 'integer' },
+    year => { data_type => 'integer', is_nullable => 1 },
     filename => { data_type => 'text' },
     summary => { data_type => 'text', is_nullable => 1 },
     comment => { data_type => 'text', is_nullable => 1 },

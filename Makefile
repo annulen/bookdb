@@ -1,2 +1,2 @@
 test:
-	DBIC_TRACE=1 prove -l
+	DBIC_TRACE=1 prove -lrv t

@@ -7,5 +7,6 @@ on 'develop' => sub {
 };
 
 on 'test' => sub {
+    requires 'Test::Fatal';
     requires 'Test::More';
 }

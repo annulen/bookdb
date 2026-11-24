@@ -1,11 +1,12 @@
 #!/usr/bin/env perl
 
-use DBICx::TestDatabase;
+use BookDb;
 use Test::More;
 
 use strict;
 use warnings;
 
-my $schema = DBICx::TestDatabase->new('BookDb::Schema');
+my $schema = BookDb->connect(':memory:');
+$schema->deploy;
 
 done_testing();

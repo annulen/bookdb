@@ -10,7 +10,7 @@ __PACKAGE__->add_columns(
     name => { data_type => 'text' },
 );
 __PACKAGE__->set_primary_key('id');
-__PACKAGE__->add_unique_constraint(['name']);
+__PACKAGE__->add_unique_constraint(tag_name => ['name']);
 
 __PACKAGE__->has_many(
     'book_tags',

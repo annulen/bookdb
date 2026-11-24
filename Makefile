@@ -5,4 +5,6 @@ cover:
 	cover -delete && HARNESS_PERL_SWITCHES=-MDevel::Cover prove -lr t && cover
 
 prompt:
-	echo -e '\n---\n' | cat - <(files-to-prompt -m .) | xclip
+	{ printf '\n---\n\n'; files-to-prompt -m .; } | xclip -selection clipboard
+
+.PHONY: test cover prompt

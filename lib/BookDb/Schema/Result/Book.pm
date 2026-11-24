@@ -1,5 +1,5 @@
 package BookDb::Schema::Result::Book;
-use base 'DBIx::Class::Core';
+use parent 'DBIx::Class::Core';
 
 __PACKAGE__->table('books');
 __PACKAGE__->add_columns(

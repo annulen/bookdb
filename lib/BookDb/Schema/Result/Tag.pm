@@ -1,5 +1,5 @@
 package BookDb::Schema::Result::Tag;
-use base 'DBIx::Class::Core';
+use parent 'DBIx::Class::Core';
 
 __PACKAGE__->table('tags');
 __PACKAGE__->add_columns(

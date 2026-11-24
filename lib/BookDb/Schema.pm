@@ -1,5 +1,5 @@
 package BookDb::Schema;
-use base qw/DBIx::Class::Schema/;
+use parent qw/DBIx::Class::Schema/;
 
 __PACKAGE__->load_namespaces();
 

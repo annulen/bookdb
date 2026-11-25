@@ -1,4 +1,7 @@
 test:
+	prove -lr t
+
+test_trace:
 	DBIC_TRACE=1 prove -lrv t
 
 cover:
@@ -10,4 +13,4 @@ create_ddl:
 prompt:
 	{ printf '\n---\n\n'; files-to-prompt -m `git ls-tree --full-tree --name-only -r HEAD`; } | xclip
 
-.PHONY: test cover create_ddl prompt
+.PHONY: test test_trace cover create_ddl prompt

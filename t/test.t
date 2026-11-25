@@ -17,6 +17,16 @@ sub fixture {
     return $schema, $books, $tags;
 }
 
+subtest 'foreign keys' => sub {
+    my ($schema) = fixture();
+
+    my $on = $schema->storage->dbh->selectrow_arrayref('PRAGMA foreign_keys');
+    is_deeply $on, [1], 'прагма включена';
+    like exception {
+        $schema->resultset('BookTag')->create({ book_id => 42, tag_id => 42 })
+    }, qr/FOREIGN KEY constraint/, 'сирота не создаётся';
+};
+
 subtest 'create / find' => sub {
     my ($schema, $books, $tags) = fixture();
 

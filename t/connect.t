@@ -7,6 +7,6 @@ use Test::More;
 use strict;
 use warnings;
 
-ok exception { BookDb->connect; }, 'connect without filename is not allowed';
+like exception { BookDb->connect; }, qr/empty \$file/, 'connect without filename is not allowed';
 
 done_testing();

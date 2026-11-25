@@ -59,7 +59,7 @@ subtest 'unique + cascade' => sub {
                      filename => 'dune.epub' });
     $tags->find_or_create({ name => 'sci-fi' }, { key => 'tag_name' });
 
-    ok exception { $tags->create({ name => 'sci-fi' }) }, 'дубль тега запрещён';
+    like exception { $tags->create({ name => 'sci-fi' }) }, qr/UNIQUE constraint/, 'дубль тега запрещён';
 
     my $book = $books->find({ filename => 'dune.epub' }, { key => 'book_filename' });
     my $id = $book->id;

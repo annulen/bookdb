@@ -7,13 +7,19 @@ use Test::More;
 use strict;
 use warnings;
 
-my $schema = BookDb->connect(':memory:');
-$schema->deploy;
+sub fixture {
+    my $schema = BookDb->connect(':memory:');
+    $schema->deploy;
 
-my $books = $schema->resultset('Book');
-my $tags = $schema->resultset('Tag');
+    my $books = $schema->resultset('Book');
+    my $tags = $schema->resultset('Tag');
+
+    return $schema, $books, $tags;
+}
 
 subtest 'create / find' => sub {
+    my ($schema, $books, $tags) = fixture();
+
     my $book = $books->create({
         title => 'SICP', author => 'Abelson, Sussman',
         year => 1985, filename => 'sicp.fb2',
@@ -24,6 +30,8 @@ subtest 'create / find' => sub {
 };
 
 subtest 'many_to_many' => sub {
+    my ($schema, $books, $tags) = fixture();
+
     my $book = $books->create({ title => 'Dune',
                                 author => 'Herbert',
                                 year => 1965,
@@ -43,6 +51,14 @@ subtest 'many_to_many' => sub {
 };
 
 subtest 'unique + cascade' => sub {
+    my ($schema, $books, $tags) = fixture();
+
+    $books->create({ title => 'Dune',
+                     author => 'Herbert',
+                     year => 1965,
+                     filename => 'dune.epub' });
+    $tags->find_or_create({ name => 'sci-fi' }, { key => 'tag_name' });
+
     ok exception { $tags->create({ name => 'sci-fi' }) }, 'дубль тега запрещён';
 
     my ($book) = $books->search({ filename => 'dune.epub' });

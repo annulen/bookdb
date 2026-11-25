@@ -61,7 +61,7 @@ subtest 'unique + cascade' => sub {
 
     ok exception { $tags->create({ name => 'sci-fi' }) }, 'дубль тега запрещён';
 
-    my ($book) = $books->search({ filename => 'dune.epub' });
+    my $book = $books->find({ filename => 'dune.epub' }, { key => 'book_filename' });
     my $id = $book->id;
     $book->delete;                              # Row->delete каскадирует
     is $schema->resultset('BookTag')->search({ book_id => $id })->count, 0;

@@ -17,6 +17,16 @@ sub fixture {
     return $schema, $books, $tags;
 }
 
+sub fixture_dune {
+    my ($schema, $books, $tags) = @_;
+    my $book = $books->create({ title => 'Dune',
+                                author => 'Herbert',
+                                year => 1965,
+                                filename => 'dune.epub' });
+    my $tag = $tags->find_or_create({ name => 'sci-fi' }, { key => 'tag_name' });
+    return $book, $tag;
+}
+
 subtest 'foreign keys' => sub {
     my ($schema) = fixture();
 
@@ -41,12 +51,7 @@ subtest 'create / find' => sub {
 
 subtest 'many_to_many' => sub {
     my ($schema, $books, $tags) = fixture();
-
-    my $book = $books->create({ title => 'Dune',
-                                author => 'Herbert',
-                                year => 1965,
-                                filename => 'dune.epub' });
-    my $scifi = $tags->find_or_create({ name => 'sci-fi' }, { key => 'tag_name' });
+    my ($book, $scifi) = fixture_dune($schema, $books, $tags);
 
     $book->add_to_tags($scifi);                 # только строка в book_tags
     is $book->tags->count, 1;
@@ -62,12 +67,7 @@ subtest 'many_to_many' => sub {
 
 subtest 'unique + cascade' => sub {
     my ($schema, $books, $tags) = fixture();
-
-    $books->create({ title => 'Dune',
-                     author => 'Herbert',
-                     year => 1965,
-                     filename => 'dune.epub' });
-    $tags->find_or_create({ name => 'sci-fi' }, { key => 'tag_name' });
+    fixture_dune($schema, $books, $tags);
 
     like exception { $tags->create({ name => 'sci-fi' }) }, qr/UNIQUE constraint/, 'дубль тега запрещён';
 
@@ -75,6 +75,15 @@ subtest 'unique + cascade' => sub {
     my $id = $book->id;
     $book->delete;                              # Row->delete каскадирует
     is $schema->resultset('BookTag')->search({ book_id => $id })->count, 0;
+};
+
+subtest 'cascade deletion 2' => sub {
+    my ($schema, $books, $tags) = fixture();
+    fixture_dune($schema, $books, $tags);
+
+    my $book_rs = $books->search_rs({ filename => 'dune.epub' });
+    $book_rs->delete;
+    is $schema->resultset('BookTag')->first, undef;
 };
 
 done_testing();

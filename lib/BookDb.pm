@@ -5,7 +5,7 @@ use Carp qw(croak);
 use strict;
 use warnings;
 
-sub connect {
+sub connect { ## no critic(Subroutines::ProhibitBuiltinHomonyms)
     my ($class, $file) = @_;
     croak 'BookDb::connect: empty $file is not allowed' unless defined $file && length $file;
 

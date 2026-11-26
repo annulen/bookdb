@@ -5,6 +5,7 @@ requires 'SQL::Translator', '1.60';
 
 on 'develop' => sub {
     requires 'Devel::Cover';
+    requires 'Perl::Critic';
 };
 
 on 'test' => sub {

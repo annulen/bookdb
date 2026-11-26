@@ -2,7 +2,7 @@
 
 use BookDb;
 use Test::Fatal;
-use Test::More;
+use Test::More tests => 2;
 
 use strict;
 use warnings;
@@ -10,4 +10,3 @@ use warnings;
 like exception { BookDb->connect; }, qr/empty \$file/, 'connect without filename is not allowed';
 like exception { BookDb->connect(''); }, qr/empty \$file/, 'connect without filename is not allowed';
 
-done_testing();

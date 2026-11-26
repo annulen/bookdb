@@ -2,7 +2,7 @@
 
 use BookDb;
 use Test::Fatal;
-use Test::More;
+use Test::More tests => 5;
 
 use strict;
 use warnings;
@@ -28,6 +28,7 @@ sub fixture_dune {
 }
 
 subtest 'foreign keys' => sub {
+    plan tests => 2;
     my ($schema) = fixture();
 
     my $on = $schema->storage->dbh->selectrow_arrayref('PRAGMA foreign_keys');
@@ -38,6 +39,7 @@ subtest 'foreign keys' => sub {
 };
 
 subtest 'create / find' => sub {
+    plan tests => 3;
     my ($schema, $books, $tags) = fixture();
 
     my $book = $books->create({
@@ -50,6 +52,7 @@ subtest 'create / find' => sub {
 };
 
 subtest 'many_to_many' => sub {
+    plan tests => 5;
     my ($schema, $books, $tags) = fixture();
     my ($book, $scifi) = fixture_dune($books, $tags);
 
@@ -66,6 +69,7 @@ subtest 'many_to_many' => sub {
 };
 
 subtest 'unique + cascade' => sub {
+    plan tests => 2;
     my ($schema, $books, $tags) = fixture();
     fixture_dune($books, $tags);
 
@@ -78,6 +82,7 @@ subtest 'unique + cascade' => sub {
 };
 
 subtest 'cascade deletion 2' => sub {
+    plan tests => 1;
     my ($schema, $books, $tags) = fixture();
     fixture_dune($books, $tags);
 
@@ -86,4 +91,3 @@ subtest 'cascade deletion 2' => sub {
     is $schema->resultset('BookTag')->first, undef;
 };
 
-done_testing();

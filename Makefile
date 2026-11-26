@@ -22,7 +22,7 @@ prompt:
 	rm -rf $(prompt-tmp)
 	mkdir -p $(prompt-tmp)
 	git archive HEAD | tar -x -C $(prompt-tmp)
-	{ printf '\n---\n\n'; (cd $(prompt-tmp) && files-to-prompt -m .); } | xclip
+	{ printf '\n---\n\n'; (cd $(prompt-tmp) && files-to-prompt -m --include-hidden .); } | xclip
 	rm -rf $(prompt-tmp)
 
 .PHONY: test test_trace critic cover create_ddl prompt

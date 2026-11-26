@@ -18,7 +18,7 @@ sub fixture {
 }
 
 sub fixture_dune {
-    my ($schema, $books, $tags) = @_;
+    my ($books, $tags) = @_;
     my $book = $books->create({ title => 'Dune',
                                 author => 'Herbert',
                                 year => 1965,
@@ -51,7 +51,7 @@ subtest 'create / find' => sub {
 
 subtest 'many_to_many' => sub {
     my ($schema, $books, $tags) = fixture();
-    my ($book, $scifi) = fixture_dune($schema, $books, $tags);
+    my ($book, $scifi) = fixture_dune($books, $tags);
 
     $book->add_to_tags($scifi);                 # только строка в book_tags
     is $book->tags->count, 1;
@@ -67,7 +67,7 @@ subtest 'many_to_many' => sub {
 
 subtest 'unique + cascade' => sub {
     my ($schema, $books, $tags) = fixture();
-    fixture_dune($schema, $books, $tags);
+    fixture_dune($books, $tags);
 
     like exception { $tags->create({ name => 'sci-fi' }) }, qr/UNIQUE constraint/, 'дубль тега запрещён';
 
@@ -79,7 +79,7 @@ subtest 'unique + cascade' => sub {
 
 subtest 'cascade deletion 2' => sub {
     my ($schema, $books, $tags) = fixture();
-    fixture_dune($schema, $books, $tags);
+    fixture_dune($books, $tags);
 
     my $book_rs = $books->search_rs({ filename => 'dune.epub' });
     $book_rs->delete;

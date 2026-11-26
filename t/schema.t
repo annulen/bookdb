@@ -2,7 +2,7 @@
 
 use BookDb;
 use Test::Fatal;
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 use strict;
 use warnings;
@@ -68,26 +68,43 @@ subtest 'many_to_many' => sub {
     is $tags->count, 1, 'set_tags не трогает сами теги';
 };
 
-subtest 'unique + cascade' => sub {
+subtest 'unique' => sub {
     plan tests => 2;
     my ($schema, $books, $tags) = fixture();
     fixture_dune($books, $tags);
 
     like exception { $tags->create({ name => 'sci-fi' }) }, qr/UNIQUE constraint/, 'дубль тега запрещён';
 
-    my $book = $books->find({ filename => 'dune.epub' }, { key => 'book_filename' });
-    my $id = $book->id;
-    $book->delete;                              # Row->delete каскадирует
-    is $schema->resultset('BookTag')->search({ book_id => $id })->count, 0;
+    ok $books->find({ filename => 'dune.epub' }, { key => 'book_filename' });
 };
 
-subtest 'cascade deletion 2' => sub {
-    plan tests => 1;
+subtest 'cascade: Row->delete' => sub {
+    plan tests => 3;
     my ($schema, $books, $tags) = fixture();
-    fixture_dune($books, $tags);
+    my ($book, $tag) = fixture_dune($books, $tags);
 
-    my $book_rs = $books->search_rs({ filename => 'dune.epub' });
-    $book_rs->delete;
-    is $schema->resultset('BookTag')->first, undef;
+    $book->add_to_tags($tag);
+
+    my $links = $schema->resultset('BookTag');
+    is $links->count, 1, 'связь есть до удаления';   # вот эта строка делает тест осмысленным
+
+    $book->delete;
+    is $links->count, 0, 'ORM-каскад снёс связь';
+    is $tags->count, 1, 'сам тег жив';
 };
 
+subtest 'cascade: ResultSet->delete' => sub {
+    plan tests => 4;
+    my ($schema, $books, $tags) = fixture();
+    my ($book, $tag) = fixture_dune($books, $tags);
+
+    $book->add_to_tags($tag);
+
+    my $links = $schema->resultset('BookTag');
+    is $links->count, 1;
+
+    $books->search_rs({ filename => 'dune.epub' })->delete;  # один SQL, без ORM-каскадов
+    is $links->count, 0, 'сработал ON DELETE CASCADE уже в БД';
+    is $books->count, 0;
+    is $tags->count, 1;
+};

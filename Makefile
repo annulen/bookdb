@@ -14,7 +14,13 @@ create_ddl:
 	mkdir -p sql
 	perl -Ilib -MBookDb -e 'BookDb->connect(":memory:")->create_ddl_dir([ "SQLite" ], undef, "sql")'
 
+prompt-tmp := .prompt-tmp
+
 prompt:
-	{ printf '\n---\n\n'; files-to-prompt -m `git ls-tree --full-tree --name-only -r HEAD`; } | xclip
+	rm -rf $(prompt-tmp)
+	mkdir -p $(prompt-tmp)
+	git archive HEAD | tar -x -C $(prompt-tmp)
+	{ printf '\n---\n\n'; (cd $(prompt-tmp) && files-to-prompt -m .); } | xclip
+	rm -rf $(prompt-tmp)
 
 .PHONY: test test_trace critic cover create_ddl prompt

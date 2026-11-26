@@ -1,6 +1,12 @@
 SHELL := /bin/bash
 .SHELLFLAGS := -o pipefail -c
 
+prompt-tmp := .prompt-tmp
+
+all: test
+
+clean:
+
 test:
 	prove -lr t
 
@@ -8,6 +14,7 @@ test_trace:
 	DBIC_TRACE=1 prove -lrv t
 
 critic:
+	checkmake Makefile
 	perlcritic .
 
 cover:
@@ -16,8 +23,6 @@ cover:
 create_ddl:
 	scripts/create_ddl.pl sql
 
-prompt-tmp := .prompt-tmp
-
 prompt:
 	rm -rf $(prompt-tmp)
 	mkdir -p $(prompt-tmp)
@@ -25,4 +30,4 @@ prompt:
 	{ printf '\n---\n\n'; (cd $(prompt-tmp) && files-to-prompt -m --include-hidden .); } | xclip
 	rm -rf $(prompt-tmp)
 
-.PHONY: test test_trace critic cover create_ddl prompt
+.PHONY: all clean test test_trace critic cover create_ddl prompt

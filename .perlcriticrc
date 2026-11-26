@@ -4,3 +4,6 @@ severity = 3
 [RegularExpressions::RequireExtendedFormatting]
 minimum_regex_length_to_complain_about = 15
 strict = 0
+
+[ErrorHandling::RequireCarping]
+allow_in_main_unless_in_subroutine = 1

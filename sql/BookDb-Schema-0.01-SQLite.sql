@@ -1,14 +1,4 @@
---
--- Created by SQL::Translator::Producer::SQLite
--- Created on Thu Nov 26 12:27:18 2026
---
-
 BEGIN TRANSACTION;
-
---
--- Table: books
---
-DROP TABLE books;
 
 CREATE TABLE books (
   id INTEGER PRIMARY KEY NOT NULL,
@@ -23,22 +13,12 @@ CREATE TABLE books (
 
 CREATE UNIQUE INDEX book_filename ON books (filename);
 
---
--- Table: tags
---
-DROP TABLE tags;
-
 CREATE TABLE tags (
   id INTEGER PRIMARY KEY NOT NULL,
   name text NOT NULL
 );
 
 CREATE UNIQUE INDEX tag_name ON tags (name);
-
---
--- Table: book_tags
---
-DROP TABLE book_tags;
 
 CREATE TABLE book_tags (
   book_id integer NOT NULL,

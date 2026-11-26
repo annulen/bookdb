@@ -11,8 +11,7 @@ cover:
 	cover -delete && HARNESS_PERL_SWITCHES=-MDevel::Cover prove -lr t && cover
 
 create_ddl:
-	mkdir -p sql
-	perl -Ilib -MBookDb -e 'BookDb->connect(":memory:")->create_ddl_dir([ "SQLite" ], undef, "sql")'
+	scripts/create_ddl.pl sql
 
 prompt-tmp := .prompt-tmp
 

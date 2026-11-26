@@ -28,8 +28,6 @@ CREATE TABLE book_tags (
   FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE INDEX book_tags_idx_book_id ON book_tags (book_id);
-
 CREATE INDEX book_tags_idx_tag_id ON book_tags (tag_id);
 
 COMMIT;

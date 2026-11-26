@@ -26,7 +26,7 @@ create_ddl:
 prompt:
 	rm -rf $(prompt-tmp)
 	mkdir -p $(prompt-tmp)
-	git archive HEAD | tar -x -C $(prompt-tmp)
+	git archive HEAD | tar -xv -C $(prompt-tmp)
 	{ printf '\n---\n\n'; (cd $(prompt-tmp) && files-to-prompt -m --include-hidden .); } | xclip
 	rm -rf $(prompt-tmp)
 

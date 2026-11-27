@@ -6,6 +6,7 @@ prompt-tmp := .prompt-tmp
 all: test
 
 clean:
+	rm -rf cover_db $(prompt-tmp)
 
 test:
 	prove -lr t

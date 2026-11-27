@@ -23,7 +23,7 @@ sub fixture_dune {
                                 author => 'Herbert',
                                 year => 1965,
                                 filename => 'dune.epub' });
-    my $tag = $tags->find_or_create({ name => 'sci-fi' }, { key => 'tag_name' });
+    my $tag = $tags->ensure_by_name('sci-fi');
     return $book, $tag;
 }
 
@@ -71,7 +71,7 @@ subtest 'many_to_many' => sub {
     $book->set_tags([$scifi]);                  # заменяет только связи
     is $tags->count, 1, "set_tags doesn't affect tags table";
 
-    my $politics = $tags->find_or_create({ name => 'politics' }, { key => 'tag_name' });
+    my $politics = $tags->ensure_by_name('politics');
     $book->add_to_tags($politics);
     is $book->tags->count, 2, 'number of tags for book';
     is $scifi->books->count, 1, 'number of books for sci-fi tag';

@@ -56,13 +56,13 @@ subtest 'create / find' => sub {
 };
 
 subtest 'many_to_many' => sub {
-    plan tests => 5;
+    plan tests => 8;
     my ($schema, $books, $tags) = fixture();
     my ($book, $scifi) = fixture_dune($books, $tags);
 
     $book->add_to_tags($scifi);                 # только строка в book_tags
-    is $book->tags->count, 1, 'verify number of tags for given book';
-    is $scifi->books->count, 1, 'verify number of books for given tag';
+    is $book->tags->count, 1, 'number of tags for book';
+    is $scifi->books->count, 1, 'number of books for tag';
 
     $book->remove_from_tags($scifi);            # связь удалена, тег жив
     is $book->tags->count, 0, 'ensure book is correctly removed from tag';
@@ -70,6 +70,12 @@ subtest 'many_to_many' => sub {
 
     $book->set_tags([$scifi]);                  # заменяет только связи
     is $tags->count, 1, "set_tags doesn't affect tags table";
+
+    my $politics = $tags->find_or_create({ name => 'politics' }, { key => 'tag_name' });
+    $book->add_to_tags($politics);
+    is $book->tags->count, 2, 'number of tags for book';
+    is $scifi->books->count, 1, 'number of books for sci-fi tag';
+    is $politics->books->count, 1, 'number of books for politics tag';
 };
 
 subtest 'unique' => sub {
